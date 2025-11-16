@@ -34,6 +34,10 @@ export const drawEvent = async (
             return { data: null, error: "Not enough participants for draw" };
         }
 
+        if (event.isDrawed === true) {
+            return { data: null, error : 'Already drawed for this event'}
+        }
+
         const shuffled = [...event.guests].sort(() => Math.random() - 0.5);
 
         const draws: Draw[] = shuffled.map((giver, i) => ({
