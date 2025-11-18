@@ -11,16 +11,23 @@ export type GetWishlistItemsResult = {
 };
 
 export const getWishlistItemsByUser = async (
-    userId: string | ObjectId
+    userId: string | ObjectId,
+    onlyFree?: boolean
 ): Promise<GetWishlistItemsResult> => {
     if (!userId) return { data: null, error: "UserId is required" };
 
     try {
         const db = await connectToMongo();
 
+        const query: any = { userId: userId.toString() };
+
+        if (onlyFree) {
+            query.status = { $ne: "DONE" };
+        }
+
         const rawItems = await db
             .collection("wishlist")
-            .find({ userId: userId.toString() })
+            .find(query)
             .toArray();
 
         const items: WishlistItem[] = rawItems.map(item => WishlistItemSchema.parse({

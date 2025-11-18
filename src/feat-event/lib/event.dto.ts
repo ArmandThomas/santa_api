@@ -24,6 +24,6 @@ export const EventSchema = z.object({
 export type Event = z.infer<typeof EventSchema>;
 
 // Schéma pour la création
-export const EventCreateSchema = EventSchema.omit({ _id: true, guests: true, ownerId: true });
+export const EventCreateSchema = EventSchema.omit({ _id: true, guests: true, ownerId: true, isDrawed: true });
 export type EventCreate = z.infer<typeof EventCreateSchema>;
 

@@ -28,7 +28,7 @@ describe("deleteWishlistItem", () => {
     it("should return error if item not found", async () => {
         const dbMock = {
             collection: vi.fn(() => ({
-                findOneAndDelete: vi.fn().mockResolvedValue({ value: null }),
+                findOneAndDelete: vi.fn().mockResolvedValue(null),
             })),
         };
         mockedConnectToMongo.mockResolvedValue(dbMock as any);
@@ -48,7 +48,7 @@ describe("deleteWishlistItem", () => {
         };
         const dbMock = {
             collection: vi.fn(() => ({
-                findOneAndDelete: vi.fn().mockResolvedValue({ value: rawItem }),
+                findOneAndDelete: vi.fn().mockResolvedValue(rawItem),
             })),
         };
         mockedConnectToMongo.mockResolvedValue(dbMock as any);

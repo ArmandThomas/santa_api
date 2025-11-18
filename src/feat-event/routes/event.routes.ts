@@ -5,6 +5,7 @@ import {AuthenticatedRequest, authMiddleware, getUserByEmail, RetrieveUserResult
 import {EventAccessResult, getEventAccess} from "../lib/access/getEventAccess";
 import {checkEventOwner} from "../middleware/isOwner.middleware";
 import {removeUserFromEvent, RemoveUserResult} from "../lib/remove/removeUserFromEvent";
+import {isFullUser} from "../../feat-auth/lib/user.dto";
 
 const router = Router();
 type InviteBody = {
@@ -108,7 +109,8 @@ router.post(
 
         try {
             const userResult: RetrieveUserResult = await getUserByEmail(email);
-            if (!userResult.data) {
+
+            if (!isFullUser(userResult.data)) {
                 return res.status(404).json({ data: null, error: "User not found" });
             }
 
@@ -144,7 +146,8 @@ router.post(
 
         try {
             const userResult = await getUserByEmail(email);
-            if (!userResult.data) {
+
+            if (!isFullUser(userResult.data)) {
                 return res.status(404).json({ data: null, error: "User not found" });
             }
 

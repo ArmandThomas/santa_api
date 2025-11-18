@@ -33,7 +33,7 @@ describe("updateStatus", () => {
     });
 
     it("should throw error if uuidDraw is missing", async () => {
-        await expect(updateStatus("" as any, giverId, wishlistItemId, "RESERVED"))
+        await expect(updateStatus("" as any, giverId, wishlistItemId, "DONE"))
             .rejects.toThrow("UUID Draw is required");
     });
 
@@ -43,7 +43,7 @@ describe("updateStatus", () => {
     });
 
     it("should throw error if wishlistItemId is missing", async () => {
-        await expect(updateStatus(uuidDraw, giverId, null as any, "RESERVED"))
+        await expect(updateStatus(uuidDraw, giverId, null as any, "DONE"))
             .rejects.toThrow("WishlistItemId is required");
     });
 
@@ -58,7 +58,7 @@ describe("updateStatus", () => {
         (getDrawReceiver as any).mockResolvedValue({ data: receiverId });
         mockFindOneAndUpdate.mockResolvedValue(null);
 
-        const result = await updateStatus(uuidDraw, giverId, wishlistItemId, "RESERVED");
+        const result = await updateStatus(uuidDraw, giverId, wishlistItemId, "DONE");
         expect(result.data).toBeNull();
         expect(result.error).toBe("Wishlist item not found or cannot be updated");
         expect(mockDb.collection).toHaveBeenCalledWith("wishlist");
@@ -70,14 +70,14 @@ describe("updateStatus", () => {
         (getDrawReceiver as any).mockResolvedValue({ data: receiverId });
         mockFindOneAndUpdate.mockResolvedValue({ ...updatedItem });
 
-        const result = await updateStatus(uuidDraw, giverId, wishlistItemId, "RESERVED");
+        const result = await updateStatus(uuidDraw, giverId, wishlistItemId, "DONE");
 
         expect(result.error).toBeUndefined();
         expect(result.data).toEqual(updatedItem);
         expect(mockDb.collection).toHaveBeenCalledWith("wishlist");
         expect(mockFindOneAndUpdate).toHaveBeenCalledWith(
             { _id: wishlistItemId, userId: receiverId.toString() },
-            { $set: { status: "RESERVED" } },
+            { $set: { status: "DONE" } },
             { returnDocument: "after" }
         );
     });

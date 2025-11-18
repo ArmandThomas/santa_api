@@ -11,7 +11,7 @@ export const listEvents = async (): Promise<ListEventsResult> => {
         const db = await connectToMongo();
 
         const rawEvents = await db.collection("events")
-            .find({})
+            .find({ isDrawed: { $ne: true } })
             .toArray();
 
         const mapped = rawEvents.map(ev => ({

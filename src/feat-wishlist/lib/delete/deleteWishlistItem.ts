@@ -24,7 +24,7 @@ export const deleteWishlistItem = async (
             .collection("wishlist")
             .findOneAndDelete({ _id: itemObjectId, userId: userObjectId.toString() });
 
-        if (!rawItem?.value?._id) {
+        if (!rawItem?._id) {
             return {data : null, error : "Item not found or not owned by user"}
         }
 

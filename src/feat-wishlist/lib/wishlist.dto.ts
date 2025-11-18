@@ -17,7 +17,7 @@ export const WishlistItemSchema = z.object({
     title: z.string().min(1, "Le titre est requis"),
     description: z.string().optional(),
     url: z.string().url().optional(),
-    status: z.enum(["FREE", "RESERVED", "DONE"]).default("FREE"),
+    status: z.enum(["FREE", "DONE"]).default("FREE"),
 });
 
 export type WishlistItem = z.infer<typeof WishlistItemSchema>;
