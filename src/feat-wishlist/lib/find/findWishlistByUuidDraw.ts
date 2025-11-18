@@ -2,9 +2,10 @@ import { ObjectId } from "mongodb";
 import { getDrawReceiver } from "../../../feat-draw/lib/drawReceiver/getDrawReceiver";
 import { getWishlistItemsByUser } from "../list/getWishlistItemsByUser";
 import {WishlistItem} from "../wishlist.dto";
+import {getUserInfo, User} from "../../../feat-auth";
 
 export type FindWishlistByUuidDrawResult = {
-    data: WishlistItem[] | null;
+    data: { wishlist : WishlistItem[], user : User | null } | null;
     error?: string;
 };
 
@@ -28,7 +29,11 @@ export const findWishlistByUuidDraw = async (
         return { data: null, error: wishlistResult.error || "Wishlist not found" };
     }
 
+    const user = await getUserInfo(receiverId);
+
+    const dataUser = user.data
+
     return {
-        data: wishlistResult.data,
+        data: {wishlist : wishlistResult.data, user : dataUser}
     };
 };

@@ -3,7 +3,7 @@ import {connectToMongo} from "../../../db/mongo";
 import {signJwt} from "../../../utils/utils-jwt/lib";
 
 export type RetrieveUserResult = {
-    data: User | null;
+    data: User | {  email : string } | null;
     jwt ?: string;
     error ?: string;
 }
@@ -13,7 +13,8 @@ export const getUserByEmail = async (email: string): Promise<RetrieveUserResult>
     try {
         const db = await connectToMongo();
         const rawUser = await db.collection("users").findOne({ email });
-        if (!rawUser) return { data: null };
+        console.log(rawUser)
+        if (!rawUser) return { data: {email: email} };
         const user = UserSchema.parse(rawUser);
         return { data: user, jwt : signJwt(user)};
     } catch (err: any) {

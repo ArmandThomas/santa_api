@@ -24,7 +24,7 @@ describe("retrieveUserFromEmail", () => {
         mockedConnectToMongo.mockResolvedValue(dbMock as any);
 
         const result = await getUserByEmail("notfound@example.com");
-        expect(result).toEqual({ data: null});
+        expect(result).toEqual({ data: { email : "notfound@example.com"}});
     });
 
     it("should return error if email is empty", async () => {

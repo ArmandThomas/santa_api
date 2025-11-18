@@ -20,6 +20,7 @@ export const getUserInfo = async (userId: string | ObjectId): Promise<GetUserInf
 
     try {
         const db = await connectToMongo();
+
         const rawUser = await db.collection("users").findOne({ _id: objectId });
 
         if (!rawUser) return { data: null, error: "User not found" };

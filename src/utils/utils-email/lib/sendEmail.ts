@@ -35,12 +35,23 @@ export const sendMail = async (
                                 Email: recipientEmail,
                             },
                         ],
-                        Subject: `Vous êtes le secret santa de ${santaReceiver.firstname} - ${santaReceiver.lastname}`,
-                        TextPart: `UUID : ${draw.uuid} \n EVENT : ${event.name}`
+                        TemplateId : 7499110,
+                        TemplateLanguage: true,
+                        Variables : {
+                            user : {
+                                firstname : santaReceiver.firstname,
+                                lastname : santaReceiver.lastname
+                            },
+                            uuid : {
+                                link: `https://santa-family.fr/api/uuid/proxy/${draw.uuid}?email=${encodeURIComponent(recipientEmail)}`
+                            },
+                            object : `${event.name} - Découvrir votre tirage au sort`
+                        }
                     },
                 ],
             });
 
+        console.log(`https://santa-family.fr/api/uuid/proxy/${draw.uuid}?email=${encodeURIComponent(recipientEmail)}`)
         console.log("Email sent:", request.body, `Vous êtes le secret santa de ${santaReceiver.firstname} - ${santaReceiver.lastname}`);
         return request.body;
     } catch (err: any) {

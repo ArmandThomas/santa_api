@@ -5,9 +5,12 @@ import { userRoutes } from "./feat-auth";
 import {wishlistRoutes} from "./feat-wishlist";
 import {eventRoutes} from './feat-event';
 import {drawRoutes} from "./feat-draw";
+import {logMiddleware} from "./utils/utils-log/logMiddleware";
 
 const app = express();
 app.use(express.json());
+
+app.use(logMiddleware)
 
 app.get("/", (req, res) => res.send("🚀 API TypeScript ready!"));
 

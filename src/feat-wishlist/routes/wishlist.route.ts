@@ -38,7 +38,7 @@ router.get(
             return res.status(401).json({ data: null, error: "Unauthorized" });
         }
 
-        const result = await getWishlistItemsByUser(userId);
+        const result = await getWishlistItemsByUser(userId, true);
 
         if (result.error) {
             return res.status(400).json(result);
