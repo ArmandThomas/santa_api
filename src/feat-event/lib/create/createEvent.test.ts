@@ -26,7 +26,6 @@ describe("createEvent", () => {
             name: "Christmas",
             eventDate: new Date().toISOString(),
             drawDate: new Date().toISOString(),
-            ownerId: new ObjectId(),
             backgroundImage: null
         });
 
@@ -41,7 +40,6 @@ describe("createEvent", () => {
             name: "Christmas",
             eventDate: new Date().toISOString(),
             drawDate: new Date().toISOString(),
-            ownerId: new ObjectId(),
             backgroundImage: null
         });
 
@@ -54,7 +52,6 @@ describe("createEvent", () => {
             name: "",
             eventDate: "",
             drawDate: "",
-            ownerId: new ObjectId(),
             backgroundImage: null
         });
 
@@ -70,7 +67,6 @@ describe("createEvent", () => {
             eventDate: new Date().toISOString(),
             drawDate: new Date().toISOString(),
             backgroundImage: "link.png",
-            ownerId: new ObjectId()
         });
 
         expect(result.data).toBeNull();

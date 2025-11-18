@@ -13,3 +13,7 @@ import {ObjectId} from "mongodb";
     });
 
 export type User = z.infer<typeof UserSchema>;
+
+export const isFullUser = (data: any): data is User => {
+    return data && typeof data === "object" && "_id" in data;
+};
