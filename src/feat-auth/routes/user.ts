@@ -1,7 +1,6 @@
 import { Router, Request, Response } from "express";
 import {
     AuthenticatedRequest,
-    getUserByEmail,
     getUserInfo,
     GetUserInfoResult,
     registerUser,
@@ -11,22 +10,24 @@ import {
 
 import {authMiddleware} from "../lib/middleware/auth.middleware";
 import {UserCreate} from "../lib/register/type";
+import {getUserByEmailOrPhone} from "../lib/login/getUserByEmailOrPhone";
 
 const router = Router();
 
 interface UserQuery {
-    email: string;
+    email?: string;
+    phone?: string;
 }
 
 router.get(
-    "/mail",
+    "/login",
     async (
         req: Request<UserQuery, any, any, UserQuery>,
         res: Response<RetrieveUserResult>
     ) => {
-        const { email } = req.query;
+        const { email, phone } = req.query;
 
-        const result = await getUserByEmail(email);
+        const result = await getUserByEmailOrPhone(email, phone);
 
         if (result.error) {
             return res.status(400).json(result);

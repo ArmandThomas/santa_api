@@ -1,7 +1,8 @@
 import { connectToMongo } from "../../../db/mongo";
-import { UserSchema, User } from "../user.dto"
+import {UserSchema, User, isFullUser} from "../user.dto"
 import { UserCreate, UserCreateSchema } from './type'
 import {signJwt} from "../../../utils/utils-jwt/lib";
+import {getUserByEmailOrPhone} from "../login/getUserByEmailOrPhone";
 
 export type RegisterUserResult = {
     data: User | null;
@@ -16,13 +17,12 @@ export const registerUser = async (
     if (!parsedData.success) {
         return { data: null, error: "Invalid data" };
     }
-
     try {
         const db = await connectToMongo();
 
-        const existing = await db.collection("users").findOne({ email: userData.email });
-        if (existing) {
-            return { data: null, error: "User with this email already exists" };
+        const existing = await getUserByEmailOrPhone(userData.email, userData.phone);
+        if (isFullUser(existing.data)) {
+            return { data: null, error: "User with this email/phone already exists" };
         }
         const result = await db.collection("users").insertOne(userData);
         const newUser: User = UserSchema.parse({ _id: result.insertedId.toString(), ...userData });

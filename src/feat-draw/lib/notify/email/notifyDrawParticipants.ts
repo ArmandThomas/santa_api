@@ -2,6 +2,7 @@ import { Draw } from "../../draw.dto"
 import { User, getUserInfo } from "../../../../feat-auth"
 import { sendMail } from "../../../../utils/utils-email"
 import {EventAccessResult} from "../../../../feat-event/lib/access/getEventAccess";
+import {connectToMongo} from "../../../../db/mongo";
 
 const SENDER_EMAIL = "contact@santa-family.fr"
 
@@ -27,13 +28,24 @@ export const notifyDrawParticipants = async (
 
             const giver: User = giverResult.data;
 
-            await sendMail(
-                SENDER_EMAIL,
-                giver.email,
-                receiver,
-                event,
-                draw
-            );
+            if (giver.email) {
+                await sendMail(
+                    SENDER_EMAIL,
+                    giver.email,
+                    receiver,
+                    event,
+                    draw
+                );
+            } else if (giver.phone) {
+                const url = `https://santa-family.fr/api/uuid/proxy/${draw.uuid}?phone=${encodeURIComponent(giver.phone)}`
+                const db = await connectToMongo();
+                const toInsert = {
+                    giver,
+                    url,
+                    receiver
+                };
+                await db.collection("phoneNotif").insertOne(toInsert);
+            }
 
         } catch (err: any) {
             console.error(`Failed to notify draw ${draw._id}:`, err.message);

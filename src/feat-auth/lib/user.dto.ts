@@ -9,7 +9,10 @@ import {ObjectId} from "mongodb";
         }, z.string().min(1)),
         firstname: z.string().min(2, "Le prénom doit contenir au moins 2 caractères"),
         lastname: z.string().min(2, "Le nom doit contenir au moins 2 caractères"),
-        email: z.string().email("Email invalide"),
+        email: z.string().email().optional(),
+        phone: z.string().optional(),
+    }).refine((data) => data.email || data.phone, {
+        message: "Email ou téléphone est obligatoire"
     });
 
 export type User = z.infer<typeof UserSchema>;
