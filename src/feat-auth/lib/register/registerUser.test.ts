@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { registerUser } from "./registerUser";
 import { connectToMongo } from "../../../db/mongo";
 import { UserCreate } from "./type";
-import {ObjectId} from "mongodb";
 
 vi.mock("../../../db/mongo", () => ({
     connectToMongo: vi.fn(),
@@ -22,7 +21,7 @@ describe("registerUser", () => {
     });
 
     it("should return error if user already exists", async () => {
-        const user: UserCreate = { firstname: "Alice", lastname: "Dupont", email: "alice@example.com" };
+        const user = { firstname: "Alice", lastname: "Dupont", email: "alice@example.com", _id : "691e1934cbfd80aa697a3b75" };
         const dbMock = {
             collection: vi.fn(() => ({
                 findOne: vi.fn().mockResolvedValue(user),
@@ -32,7 +31,7 @@ describe("registerUser", () => {
         mockedConnectToMongo.mockResolvedValue(dbMock as any);
 
         const result = await registerUser(user);
-        expect(result).toEqual({ data: null, error: "User with this email already exists" });
+        expect(result).toEqual({ data: null, error: "User with this email/phone already exists" });
     });
 
     it("should create a new user if valid and not existing", async () => {

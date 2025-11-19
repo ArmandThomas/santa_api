@@ -1,11 +1,12 @@
 // src/feat-events/routes/event.routes.ts
 import { Router, Response } from "express";
 import {createEvent, CreateEventResult, JoinUserResult, joinUserToEvent, listEvents, ListEventsResult} from "../index";
-import {AuthenticatedRequest, authMiddleware, getUserByEmail, RetrieveUserResult} from "../../feat-auth";
+import {AuthenticatedRequest, authMiddleware, RetrieveUserResult} from "../../feat-auth";
 import {EventAccessResult, getEventAccess} from "../lib/access/getEventAccess";
 import {checkEventOwner} from "../middleware/isOwner.middleware";
 import {removeUserFromEvent, RemoveUserResult} from "../lib/remove/removeUserFromEvent";
 import {isFullUser} from "../../feat-auth/lib/user.dto";
+import {getUserByEmailOrPhone} from "../../feat-auth/lib/login/getUserByEmailOrPhone";
 
 const router = Router();
 type InviteBody = {
@@ -101,14 +102,14 @@ router.post(
         res: Response<JoinUserResult>
     ) => {
         const eventId = req.params.id;
-        const { email } = req.body;
+        const { email, phone } = req.body;
 
-        if (!email) {
-            return res.status(400).json({ data: null, error: "Email is required" });
+        if (!email && !phone) {
+            return res.status(400).json({ data: null, error: "Email or phone is required" });
         }
 
         try {
-            const userResult: RetrieveUserResult = await getUserByEmail(email);
+            const userResult: RetrieveUserResult = await getUserByEmailOrPhone(email, phone);
 
             if (!isFullUser(userResult.data)) {
                 return res.status(404).json({ data: null, error: "User not found" });
@@ -138,14 +139,14 @@ router.post(
         res: Response<RemoveUserResult>
     ) => {
         const eventId = req.params.id;
-        const { email } = req.body;
+        const { email, phone } = req.body;
 
-        if (!email) {
-            return res.status(400).json({ data: null, error: "Email is required" });
+        if (!email && !phone) {
+            return res.status(400).json({ data: null, error: "Email or phone is required" });
         }
 
         try {
-            const userResult = await getUserByEmail(email);
+            const userResult = await getUserByEmailOrPhone(email, phone);
 
             if (!isFullUser(userResult.data)) {
                 return res.status(404).json({ data: null, error: "User not found" });
